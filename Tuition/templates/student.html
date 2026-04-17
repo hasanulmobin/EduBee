@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f3f5f9;
+            margin: 0;
+        }
+
+        .navbar {
+            background: #1e293b;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .navbar a {
+            color: white;
+            margin-right: 20px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .profile {
+            width: 30%;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            background: #2563eb;
+            border-radius: 50%;
+            color: white;
+            font-size: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+        }
+
+        .badge {
+            margin-top: 10px;
+            padding: 6px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: white;
+        }
+
+        .student-role {
+            background: #2563eb;
+        }
+
+        .info {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .info p {
+            margin: 8px 0;
+        }
+
+        .right {
+            width: 70%;
+        }
+
+        .btn {
+            display: block;
+            padding: 10px;
+            text-align: center;
+            background: #2563eb;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .tuition {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <div>
+        <strong>EduBee</strong>
+        <a href="#">Feed</a>
+        <a href="#">Student Profile</a>
+        <a href="#">Payments</a>
+        <a href="#">Feedback</a>
+    </div>
+    <div>
+        <a href="#">Logout</a>
+        <a href="#" style="background:#2563eb;padding:6px 10px;border-radius:5px;">+ Post</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <!-- LEFT PROFILE -->
+    <div class="card profile">
+
+        <div class="avatar">
+            {{ student.Name|slice:":1" }}
+        </div>
+
+        <h2>{{ student.Name }}</h2>
+
+        <div class="badge student-role">Student</div>
+
+        <hr>
+
+        <div class="info">
+            <p><strong>Class:</strong> {{ student.Class }}</p>
+            <p><strong>Version:</strong> {{ student.Version }}</p>
+            <p><strong>Background:</strong> {{ student.Background }}</p>
+            <p><strong>Address:</strong> {{ student.Address }}</p>
+            <p style="color:gray;">Joined: {{ student.Join_Date }}</p>
+        </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right">
+
+        <!-- MY POSTS -->
+        <div class="card section">
+            <h2>My Tuition Feed</h2>
+
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="tuition">
+                        <p><strong>{{ post.Subject }}</strong> (Class {{ post.Class }})</p>
+                        <p>📍 {{ post.Address }} | 💰 {{ post.Salary }} Tk</p>
+                        <p>Status: {{ post.Status }}</p>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>You haven't posted any requirements yet.</p>
+                <a href="#" class="btn">Post a New Tuition</a>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
