@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Hero Section -->
+<div class="p-5 mb-4 bg-dark text-white rounded-3 text-center">
+    <h1 class="display-5 fw-bold">📚 Welcome to EduBee</h1>
+    <p class="fs-5">Find the perfect tutor or post a tuition job in minutes.</p>
+    <div class="d-flex justify-content-center gap-3 mt-3">
+        {% if user.is_authenticated %}
+            <a href="{% url 'post_list' %}" class="btn btn-warning btn-lg">Browse Posts</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-light btn-lg">My Dashboard</a>
+        {% else %}
+            <a href="{% url 'register' %}" class="btn btn-warning btn-lg">Get Started</a>
+            <a href="{% url 'user_login' %}" class="btn btn-outline-light btn-lg">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Feature Cards -->
+<div class="row g-4 text-center mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="fs-1 mb-3">🎯</div>
+                <h5 class="card-title">Post Tuition Jobs</h5>
+                <p class="card-text text-muted">
+                    Students can post tuition requirements and get applications from verified teachers.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="fs-1 mb-3">👨‍🏫</div>
+                <h5 class="card-title">Find Verified Teachers</h5>
+                <p class="card-text text-muted">
+                    Browse profiles of verified, experienced teachers and connect instantly.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body p-4">
+                <div class="fs-1 mb-3">💳</div>
+                <h5 class="card-title">Secure Payments</h5>
+                <p class="card-text text-muted">
+                    Pay safely via bKash, Nagad, or bank transfer with full payment history.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row g-3 text-center mb-5">
+    <div class="col-md-4">
+        <div class="card bg-primary text-white p-3 shadow-sm">
+            <h3>{{ total_posts }}</h3>
+            <p class="mb-0">Open Tuition Posts</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-success text-white p-3 shadow-sm">
+            <h3>{{ total_teachers }}</h3>
+            <p class="mb-0">Verified Teachers</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-warning text-dark p-3 shadow-sm">
+            <h3>{{ total_students }}</h3>
+            <p class="mb-0">Registered Students</p>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Posts -->
+<h4 class="mb-3">🕐 Recent Tuition Posts</h4>
+<div class="row g-3">
+    {% for post in recent_posts %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">{{ post.subject }} — Class {{ post.s_class }}</h6>
+                <p class="mb-1"><strong>Mode:</strong> {{ post.get_mode_display }}</p>
+                <p class="mb-1"><strong>Salary:</strong> ৳{{ post.salary }}/month</p>
+                <p class="mb-1 text-muted small">{{ post.description|truncatewords:12 }}</p>
+            </div>
+            <div class="card-footer">
+                <a href="{% url 'post_detail' post.pk %}"
+                   class="btn btn-sm btn-outline-primary w-100">View Details</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <p class="text-muted">No posts yet.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark text-center">
+                <h4>⭐ Leave a Review</h4>
+            </div>
+            <div class="card-body">
+                {% if teacher %}
+                <div class="alert alert-light border mb-3">
+                    <strong>Teacher:</strong>
+                    {{ teacher.user.get_full_name|default:teacher.user.username }}
+                </div>
+                {% endif %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="text-danger small">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-warning">⭐ Submit Review</button>
+                        <a href="{% url 'teacher_list' %}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
