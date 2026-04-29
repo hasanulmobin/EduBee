@@ -31,7 +31,7 @@ class TuitionPostForm(forms.ModelForm):
 class TuitionApplicationForm(forms.ModelForm):
     class Meta:
         model  = TuitionApplication
-        fields = []   # teacher & post set in view
+        fields = []
 
 
 class PaymentForm(forms.ModelForm):
