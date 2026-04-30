@@ -24,7 +24,7 @@ class User(AbstractUser):
     def is_admin(self):
         return self.is_superuser or self.role == 'admin'
 
-    def _str_(self):
+    def __str__(self):
         return f"{self.username} ({self.role})"
 
 
@@ -34,7 +34,7 @@ class Student(models.Model):
     version    = models.CharField(max_length=50)
     background = models.TextField(blank=True)
 
-    def _str_(self):
+    def __str__(self):
         return f"Student: {self.user.username}"
 
 
@@ -53,5 +53,5 @@ class Teacher(models.Model):
                           )
     expected_salary     = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    def _str_(self):
+    def __str__(self):
         return f"Teacher: {self.user.username}"
