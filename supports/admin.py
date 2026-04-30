@@ -8,3 +8,7 @@ class ReviewAdmin(admin.ModelAdmin):
     list_filter   = ['rating']
     search_fields = ['student_userusername', 'teacheruser_username']
 
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display  = ['sender', 'receiver', 'time']
+    search_fields = ['sender_username', 'receiver_username']
