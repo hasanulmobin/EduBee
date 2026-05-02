@@ -1,23 +1,18 @@
-"""
-URL configuration for EDUBEE project.
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/6.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include("Tuition.urls")),
+    # TuitionPost
+    path('',                              views.post_list,                 name='post_list'),
+    path('<int:pk>/',                     views.post_detail,               name='post_detail'),
+    path('create/',                       views.post_create,               name='post_create'),
+    path('<int:pk>/update/',              views.post_update,               name='post_update'),
+    path('<int:pk>/delete/',              views.post_delete,               name='post_delete'),
+    # Applications
+    path('<int:post_pk>/apply/',          views.apply_post,                name='apply_post'),
+    path('application/<int:pk>/withdraw/', views.withdraw_application,     name='withdraw_application'),
+    path('application/<int:pk>/status/',   views.update_application_status,name='update_application_status'),
+    # Payment
+    path('<int:post_pk>/pay/',            views.payment_create,            name='payment_create'),
+    path('payments/',                     views.payment_list,              name='payment_list'),
 ]
