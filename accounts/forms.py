@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from .models import User, Student, Teacher
 
+
 def add_bootstrap(form):
     for field in form.fields.values():
         widget = field.widget
@@ -15,15 +16,20 @@ def add_bootstrap(form):
                     widget.attrs['class'] = existing + ' form-check-input'
                 else:
                     widget.attrs['class'] = existing + ' form-control'
+
+
 class RegisterForm(UserCreationForm):
     ROLE_CHOICES = [('student', 'Student'), ('teacher', 'Teacher')]
     role = forms.ChoiceField(choices=ROLE_CHOICES)
 
     class Meta:
-        model  = User
-        fields = ['username', 'email', 'first_name', 'last_name',
-                  'phone', 'address', 'gender', 'profile_picture',
-                  'password1', 'password2', 'role']
+        model = User
+        fields = [
+            'username', 'email', 'first_name', 'last_name',
+            'phone', 'address', 'gender', 'profile_picture',
+            'password1', 'password2'
+        ]
+
         widgets = {
             'address': forms.Textarea(attrs={'rows': 2}),
         }
@@ -31,7 +37,7 @@ class RegisterForm(UserCreationForm):
 
 class StudentProfileForm(forms.ModelForm):
     class Meta:
-        model  = Student
+        model = Student
         fields = ['s_class', 'version', 'background']
         widgets = {
             'background': forms.Textarea(attrs={'rows': 3}),
@@ -40,7 +46,7 @@ class StudentProfileForm(forms.ModelForm):
 
 class TeacherProfileForm(forms.ModelForm):
     class Meta:
-        model  = Teacher
+        model = Teacher
         fields = ['bio', 'expected_salary']
         widgets = {
             'bio': forms.Textarea(attrs={'rows': 3}),
@@ -49,9 +55,11 @@ class TeacherProfileForm(forms.ModelForm):
 
 class UserUpdateForm(forms.ModelForm):
     class Meta:
-        model  = User
-        fields = ['first_name', 'last_name', 'email',
-                  'phone', 'address', 'gender', 'profile_picture']
+        model = User
+        fields = [
+            'first_name', 'last_name', 'email',
+            'phone', 'address', 'gender', 'profile_picture'
+        ]
         widgets = {
             'address': forms.Textarea(attrs={'rows': 2}),
         }
