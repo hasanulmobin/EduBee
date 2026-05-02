@@ -15,4 +15,8 @@ urlpatterns = [
     # Payment
     path('<int:post_pk>/pay/',            views.payment_create,            name='payment_create'),
     path('payments/',                     views.payment_list,              name='payment_list'),
+       path('<int:pk>/close/',              views.close_post,        name='close_post'),
+    path('<int:post_pk>/hire/<int:application_pk>/', views.hire_teacher, name='hire_teacher'),
+    path('teacher/payments/', views.teacher_payments, name='teacher_payments'),
+    path('my-posts/', views.my_posts, name='my_posts'),
 ]
