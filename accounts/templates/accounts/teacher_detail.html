@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="row">
+
+
+    <div class="col-md-4 text-center">
+
+        <div class="card shadow-sm p-3">
+
+            {% if teacher.user.profile_picture %}
+                <img src="{{ teacher.user.profile_picture.url }}"
+                     width="150" height="150"
+                     class="rounded-circle mb-3 object-fit-cover border mx-auto d-block">
+            {% else %}
+                <img src="https://via.placeholder.com/150"
+                     width="150" height="150"
+                     class="rounded-circle mb-3 border mx-auto d-block">
+            {% endif %}
+
+            <h4>{{ teacher.user.get_full_name|default:teacher.user.username }}</h4>
+            <p class="text-muted">{{ teacher.user.email }}</p>
+            <p><strong>Phone:</strong> {{ teacher.user.phone|default:"N/A" }}</p>
+            <p><strong>Expected Salary:</strong> ৳{{ teacher.expected_salary }}/month</p>
+
+            <span class="badge bg-success">Verified</span>
+
+            <div class="d-flex flex-column gap-2 mt-3">
+
+                {% if user.is_authenticated and user.is_student %}
+
+                    <a href="{% url 'send_message' teacher.user.pk %}"
+                       class="btn btn-outline-info btn-sm">
+                         Send Message
+                    </a>
+
+                    <a href="{% url 'review_create' teacher.pk %}"
+                       class="btn btn-outline-warning btn-sm">
+                         Leave Review
+                    </a>
+
+                    <a href="{% url 'report_user' teacher.user.pk %}"
+                       class="btn btn-outline-danger btn-sm">
+                         Report Teacher
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="col-md-8">
+
+
+        <div class="card shadow-sm p-3 mb-4">
+            <h5> About</h5>
+            <p>{{ teacher.bio|default:"No bio provided." }}</p>
+        </div>
+
+
+        {% if teacher.education %}
+        <div class="card shadow-sm p-3 mb-4">
+            <h5> Education</h5>
+            <p>{{ teacher.education|linebreaks }}</p>
+        </div>
+        {% endif %}
+
+
+        {% if teacher.subjects %}
+        <div class="card shadow-sm p-3 mb-4">
+            <h5> Subjects</h5>
+            <p>{{ teacher.subjects }}</p>
+        </div>
+        {% endif %}
+
+
+        {% if teacher.experience %}
+        <div class="card shadow-sm p-3 mb-4">
+            <h5> Experience</h5>
+            <p>{{ teacher.experience|linebreaks }}</p>
+        </div>
+        {% endif %}
+
+{#        {% if teacher.cv %}#}
+{#        <div class="card shadow-sm p-3 mb-4">#}
+{#            <h5>📄 Curriculum Vitae</h5>#}
+{#            <a href="{{ teacher.cv.url }}" class="btn btn-outline-primary" download>#}
+{#                ⬇️ Download CV#}
+{#            </a>#}
+{#        </div>#}
+{#        {% endif %}#}
+
+
+        <div class="card shadow-sm p-3 mb-4
+            {% if teacher.verification_status == 'verified' %}border-success
+            {% elif teacher.verification_status == 'rejected' %}border-danger
+            {% else %}border-warning{% endif %}">
+
+            <h5> Verification Status</h5>
+
+            <span class="badge fs-6
+                {% if teacher.verification_status == 'verified' %}bg-success
+                {% elif teacher.verification_status == 'rejected' %}bg-danger
+                {% else %}bg-warning text-dark{% endif %}">
+                {{ teacher.verification_status|capfirst }}
+            </span>
+
+        </div>
+
+
+        <div class="card shadow-sm p-3">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0"> Reviews ({{ teacher.reviews.count }})</h5>
+            </div>
+
+            {% if user.is_authenticated and user.is_student %}
+            <div class="mb-3">
+                <a href="{% url 'review_create' teacher.pk %}"
+                   class="btn btn-warning btn-sm">
+                     Write a Review
+                </a>
+            </div>
+            {% endif %}
+
+            {% for review in teacher.reviews.all %}
+            <div class="border-bottom pb-2 mb-2">
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+                        <strong>{{ review.student.user.username }}</strong>
+
+                        <span class="text-warning ms-2">
+                            {% if review.rating == 1 %} Poor
+                            {% elif review.rating == 2 %} Fair
+                            {% elif review.rating == 3 %} Good
+                            {% elif review.rating == 4 %} Very Good
+                            {% elif review.rating == 5 %} Excellent
+                            {% endif %}
+                        </span>
+
+                        <p class="mb-1 text-muted small">{{ review.date }}</p>
+                        <p class="mb-1">{{ review.comment }}</p>
+                    </div>
+
+                    {% if user.is_authenticated and review.student.user == user %}
+                    <div class="d-flex gap-1">
+
+                        <a href="{% url 'review_update' review.pk %}"
+                           class="btn btn-sm btn-outline-warning"></a>
+
+                        <form action="{% url 'review_delete' review.pk %}"
+                              method="POST" class="d-inline">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Delete this review?')">
+
+                            </button>
+                        </form>
+
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            {% empty %}
+                <p class="text-muted text-center py-3">
+                    No reviews yet. Hire this teacher to leave a review!
+                </p>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
