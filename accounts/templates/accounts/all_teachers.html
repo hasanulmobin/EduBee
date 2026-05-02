@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2> All Teachers</h2>
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary btn-sm">
+        ← Back to Dashboard
+    </a>
+</div>
+
+
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link active" href="{% url 'all_teachers' %}">All</a>
+    </li>
+</ul>
+
+{% if teachers %}
+<div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Photo</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Salary</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for teacher in teachers %}
+            <tr>
+
+                <td class="text-center">
+                    {% if teacher.user.profile_picture %}
+                        <img src="{{ teacher.user.profile_picture.url }}"
+                             width="45" height="45"
+                             class="rounded-circle object-fit-cover border">
+                    {% else %}
+                        <img src="https://via.placeholder.com/45?text=User"
+                             width="45" height="45"
+                             class="rounded-circle border">
+                    {% endif %}
+                </td>
+
+                <td><strong>{{ teacher.user.username }}</strong></td>
+                <td>{{ teacher.user.email }}</td>
+                <td>{{ teacher.user.phone|default:"—" }}</td>
+                <td>৳{{ teacher.expected_salary }}</td>
+
+                <td>
+                    {% if teacher.verification_status == 'verified' %}
+                        <span class="badge bg-success">Verified</span>
+                    {% elif teacher.verification_status == 'rejected' %}
+                        <span class="badge bg-danger">Rejected</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    <form action="{% url 'verify_teacher' teacher.pk %}"
+                          method="POST"
+                          class="d-flex gap-1 flex-wrap">
+
+                        {% csrf_token %}
+
+                        {% if teacher.verification_status != 'verified' %}
+                        <button name="action" value="verify"
+                                class="btn btn-success btn-sm"
+                                onclick="return confirm('Verify {{ teacher.user.username }}?')">
+                            Verify
+                        </button>
+                        {% endif %}
+
+                        {% if teacher.verification_status != 'rejected' %}
+                        <button name="action" value="reject"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Reject {{ teacher.user.username }}?')">
+                            Reject
+                        </button>
+                        {% endif %}
+
+                        {% if teacher.verification_status != 'pending' %}
+                        <button name="action" value="pending"
+                                class="btn btn-warning btn-sm text-dark">
+                            Pending
+                        </button>
+                        {% endif %}
+
+                    </form>
+                </td>
+
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% else %}
+    <div class="alert alert-info">No teachers found.</div>
+{% endif %}
+
+{% endblock %}
